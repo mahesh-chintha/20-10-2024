@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 48%;
+            padding: 10px;
+            margin: 5px 1%;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        user:<input type="text" id="inp1"><br>
+        password:<input type="text" id="inp2">
+        <button onclick="login()" id="btn1">login</button>
+        <button onclick="signup()">signup</button>
+    </div>
+</body>
+<script>
+    var inp1 = document.getElementById("inp1");
+    var inp2 = document.getElementById("inp2");
+    var btn1 = document.getElementById("btn1");
+
+    function login() {
+        fetch("http://localhost:3000/data")
+        .then(val => val.json())
+        .then(res => {
+            let ud = false;
+            for (i of res) {
+                if (i.name == inp1.value && i.password == inp2.value) {
+                    ud = true;
+                    break;
+                }
+            }
+            if (!ud) {
+                alert("not registered");
+                inp1.value = '';
+                inp2.value = '';
+            }
+            if (ud) {
+                alert("registered");
+                inp1.value = '';
+                inp2.value = '';
+            }
+        })
+        .catch(err => console.log("error"));
+    }
+
+    function signup() {
+        let newdata = {
+            "id": 2,
+            "name": inp1.value,
+            "password": inp2.value
+        };
+        fetch("http://localhost:3000/data", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(newdata)
+        });
+    }
+</script>
+</html>
